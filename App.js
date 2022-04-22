@@ -1,40 +1,55 @@
 import React, { useEffect, useState } from 'react';
 
 import mockedData from '../data.json';
+import api from './utils/api';
+
 import Logo from './components/Logo';
-import { Search } from './components/Search';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { List } from './components/List';
-import './index.css';
+import { Search } from './components/Search';
 import { PracticeContainer } from './practice/PracticeContainer';
 
+import './index.css';
 
 export const App = () => {
-    const [foodList, setFoodList] = useState(mockedData);
-    const [inputValue, setIntputValue] = useState('');
+    const [foodList, setFoodList] = useState(null);
+    const [inputValue, setInputValue] = useState('');
     
-     const handleChange = (event) => {
-         const {
-             target: { value }
-         } = event;
-         setIntputValue(value);
-        }
-        const filterFoodList =(inputValue) =>{
-        const filterList = mockedData.filter(({ name }) => name.includes(inputValue));
-        setFoodList(filterList);
+
+    const handleChange = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setInputValue(value);
+    };
+
+    const clearSearch = ( ) =>{
+        setInputValue("")
     }
-    useEffect(()=>{
-         filterFoodList(inputValue);
-    },[inputValue]);  
-     
-    
+
+    const filterFoodList = (inputValue) => {
+        const filteredList = foodList?.filter(({ name }) => name.includes(inputValue));
+        setFoodList(filteredList);
+    };
+
+    // useEffect(() => {
+    //     api.getProducts()
+    //         .then(({ products }) => setFoodList(products))
+    //         .catch((err) => err.message);
+    // }, []);
+
+    useEffect(() => {
+        filterFoodList(inputValue);
+        api.search(inputValue).then((list) => setFoodList(list))
+    }, [inputValue]);
+
     return (
         <div className='appContainer'>
-                <Header >
-                    <Logo/>
-                    <Search handleChange={handleChange}/>
-                </Header >
+            <Header>
+                <Logo />
+                <Search hendleClick={clearSearch} handleChange={handleChange} />
+            </Header>
             <div className='content container'>
                 <div className='content__cards'>
                     <List list={foodList} />

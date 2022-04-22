@@ -1,10 +1,12 @@
-import React from 'react'
- 
+import React from 'react';
+import './index.css';
+import { ReactComponent as CloseSearch } from '../../../public/assets/svg/ic-close-input.svg';
 
-export const Search = ({handleChange}) => {
-  return (
-    <div>
-        <input onChange={handleChange} />
-    </div>
-  )
-}
+export const Search = ({ handleChange ,handleClick}) => {
+    return (
+        <div className='search'>
+            <input type='text' placeholder='Поиск' className='search__input' onChange={handleChange} />
+            <button className='search__btn'>{<CloseSearch onClick = { handleClick} />}</button>
+        </div>
+    );
+};
